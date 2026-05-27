@@ -443,6 +443,14 @@ function TreeNode({ node, depth, selectedName, onSelect, inheritedColor }) {
   const accent = isString ? inheritedColor : (getColor(name, inheritedColor));
   const isSelected = selectedName === name;
 
+  // UI palette (visual-only)
+  const bg = "transparent";
+  const hoverBg = "#f8fafc";
+  const selectedBg = "#f3f4f6";
+  const border = "#b8c2cc";
+  const indicator = isSelected ? "#2563eb" : "transparent";
+
+
   const handleClick = () => {
     if (hasChildren) setOpen(o => !o);
     onSelect(name, accent);
@@ -456,19 +464,22 @@ function TreeNode({ node, depth, selectedName, onSelect, inheritedColor }) {
     cursor: "pointer",
     borderRadius: 4,
     marginBottom: 1,
-    background: isSelected ? `${accent}18` : "transparent",
-    borderLeft: isSelected ? `2px solid ${accent}` : "2px solid transparent",
+    background: isSelected ? selectedBg : bg,
+    borderLeft: isSelected ? `2px solid #2563eb` : `2px solid transparent`,
     transition: "background 0.15s, border-color 0.15s",
   };
+
 
   return (
     <div>
       <div style={nodeStyle} onClick={handleClick}
-        onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-        onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = "transparent"; }}>
-        <span style={{ width: 6, height: 6, borderRadius: "50%", background: accent, flexShrink: 0, opacity: isSelected ? 1 : 0.6 }} />
+        onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = hoverBg; }}
+        onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = bg; }}>
+        <span style={{ width: 6, height: 6, borderRadius: "50%", background: accent, flexShrink: 0, opacity: isSelected ? 1 : 0.85 }} />
         <span style={{
-          color: "#ffffff",
+          color: isSelected ? "#111827" : "#111111",
+
+
           fontSize: depth === 0 ? 15 : depth === 1 ? 13.5 : depth === 2 ? 12.5 : 12,
           fontWeight: depth === 0 ? 600 : depth === 1 ? 500 : depth === 2 ? 400 : 400,
           fontFamily: depth >= 2 ? "'JetBrains Mono', 'Fira Code', monospace" : "inherit",
@@ -479,11 +490,12 @@ function TreeNode({ node, depth, selectedName, onSelect, inheritedColor }) {
           {name}
         </span>
         {hasChildren && (
-          <span style={{ color: "#ffffff", opacity: 0.3, fontSize: 10, fontFamily: "monospace", transform: open ? "rotate(90deg)" : "none", transition: "transform 0.2s" }}>▶</span>
+          <span style={{ color: "#444444", opacity: 0.6, fontSize: 10, fontFamily: "monospace", transform: open ? "rotate(90deg)" : "none", transition: "transform 0.2s" }}>▶</span>
         )}
       </div>
       {hasChildren && open && (
-        <div style={{ paddingLeft: depth === 0 ? 16 : 14, borderLeft: `1px solid ${accent}22`, marginLeft: 14 }}>
+        <div style={{ paddingLeft: depth === 0 ? 16 : 14, borderLeft: `1.25px solid ${border}`, marginLeft: 14 }}>
+
           {node.children.map((child, i) => (
             <TreeNode
               key={typeof child === "string" ? child : child.name + i}
@@ -509,11 +521,12 @@ function DetailPanel({ name, accent }) {
   if (!name) {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 16 }}>
-        <div style={{ width: 48, height: 48, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ width: 48, height: 48, borderRadius: "50%", border: "1px solid #e5e7eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <span style={{ fontSize: 22, opacity: 0.25 }}>⬡</span>
         </div>
-        <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 12, fontFamily: "monospace", letterSpacing: "0.1em", textAlign: "center" }}>SELECT A NODE<br/>TO EXPLORE</p>
+        <p style={{ color: "#444444", fontSize: 12, fontFamily: "monospace", letterSpacing: "0.1em", textAlign: "center" }}>SELECT A NODE<br/>TO EXPLORE</p>
       </div>
+
     );
   }
 
@@ -521,50 +534,57 @@ function DetailPanel({ name, accent }) {
   const rw = getRW(name);
 
   return (
-    <div ref={panelRef} style={{ padding: "28px 24px", overflowY: "auto", height: "100%", boxSizing: "border-box" }}>
+    <div ref={panelRef} style={{ padding: "28px 24px", overflowY: "auto", height: "100%", boxSizing: "border-box", background: "#ffffff" }}>
       {/* Top accent line */}
-      <div style={{ height: 2, background: accent, borderRadius: 1, marginBottom: 22, opacity: 0.85 }} />
+      <div style={{ height: 2, background: "#e5e7eb", borderRadius: 1, marginBottom: 22, opacity: 1 }} />
+
 
       {/* Name */}
-      <h2 style={{ color: "#ffffff", fontSize: 20, fontWeight: 700, margin: "0 0 6px", lineHeight: 1.3, letterSpacing: "-0.01em" }}>{name}</h2>
+      <h2 style={{ color: "#111111", fontSize: 20, fontWeight: 700, margin: "0 0 6px", lineHeight: 1.3, letterSpacing: "-0.01em" }}>{name}</h2>
+
 
       {/* Category tag */}
-      <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: `${accent}1a`, border: `1px solid ${accent}40`, borderRadius: 4, padding: "3px 10px", marginBottom: 18 }}>
-        <span style={{ width: 5, height: 5, borderRadius: "50%", background: accent }} />
-        <span style={{ color: accent, fontSize: 10, fontFamily: "monospace", letterSpacing: "0.1em", fontWeight: 600 }}>ML ALGORITHM</span>
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 4, padding: "3px 10px", marginBottom: 18 }}>
+        <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#9ca3af" }} />
+        <span style={{ color: "#444444", fontSize: 10, fontFamily: "monospace", letterSpacing: "0.1em", fontWeight: 600 }}>ML ALGORITHM</span>
       </div>
+
 
       {/* Definition */}
       {def && (
         <div style={{ marginBottom: 24 }}>
-          <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 10, fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 8, textTransform: "uppercase" }}>Definition</p>
-          <p style={{ color: "rgba(255,255,255,0.88)", fontSize: 13.5, lineHeight: 1.75, margin: 0 }}>{def}</p>
+          <p style={{ color: "#444444", fontSize: 10, fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 8, textTransform: "uppercase" }}>Definition</p>
+          <p style={{ color: "#111111", fontSize: 13.5, lineHeight: 1.75, margin: 0 }}>{def}</p>
+
         </div>
       )}
 
       {/* Divider */}
-      <div style={{ height: "1px", background: "rgba(255,255,255,0.06)", margin: "0 0 20px" }} />
+      <div style={{ height: "1px", background: "#e5e7eb", margin: "0 0 20px" }} />
+
 
       {/* Real-World Intelligence */}
       <div style={{ marginBottom: 20 }}>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 10, fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 10, textTransform: "uppercase" }}>Real-World Intelligence</p>
-        <div style={{ background: `${accent}0d`, border: `1px solid ${accent}2a`, borderRadius: 6, padding: "14px 16px" }}>
-          <p style={{ color: "rgba(255,255,255,0.82)", fontSize: 13, lineHeight: 1.7, margin: 0, fontStyle: "italic" }}>"{rw.intel}"</p>
+        <p style={{ color: "#444444", fontSize: 10, fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 10, textTransform: "uppercase" }}>Real-World Intelligence</p>
+        <div style={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 6, padding: "14px 16px" }}>
+          <p style={{ color: "#111111", fontSize: 13, lineHeight: 1.7, margin: 0, fontStyle: "italic" }}>"{rw.intel}"</p>
         </div>
+
       </div>
 
       {/* Live Applications */}
       <div>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 10, fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 10, textTransform: "uppercase" }}>Where ML Exists Today</p>
+        <p style={{ color: "#444444", fontSize: 10, fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: 10, textTransform: "uppercase" }}>Where ML Exists Today</p>
+
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {rw.apps.map((app, i) => (
             <div key={i} style={{
               display: "flex", alignItems: "flex-start", gap: 10,
-              background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
+              background: "#ffffff", border: "1px solid #e5e7eb",
               borderRadius: 6, padding: "9px 12px",
             }}>
               <span style={{ fontSize: 15, flexShrink: 0, marginTop: 1 }}>{app.split("  ")[0]}</span>
-              <span style={{ color: "rgba(255,255,255,0.75)", fontSize: 12.5, lineHeight: 1.5, fontFamily: "'JetBrains Mono', monospace" }}>
+              <span style={{ color: "#444444", fontSize: 12.5, lineHeight: 1.5, fontFamily: "'JetBrains Mono', monospace" }}>
                 {app.split("  ").slice(1).join("  ")}
               </span>
             </div>
@@ -605,17 +625,19 @@ export default function MLUniverse() {
     <div style={{
       display: "flex", flexDirection: "column",
       height: "100vh", width: "100%",
-      background: "#07090e",
+      background: "#ffffff",
       fontFamily: "'Inter', 'SF Pro Display', system-ui, sans-serif",
-      color: "#ffffff",
+      color: "#111111",
+
       overflow: "hidden",
     }}>
       {/* ── HEADER */}
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "12px 24px",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        background: "#0a0c12",
+        borderBottom: "1px solid #e5e7eb",
+        background: "#ffffff",
+
         flexShrink: 0,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -624,8 +646,9 @@ export default function MLUniverse() {
               <div key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: c }} />
             ))}
           </div>
-          <span style={{ color: "#ffffff", fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>Machine Learning Universe</span>
-          <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 11, fontFamily: "monospace" }}>// 13 domains · 150+ algorithms</span>
+          <span style={{ color: "#111111", fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>Machine Learning Universe</span>
+          <span style={{ color: "#444444", fontSize: 11, fontFamily: "monospace" }}>// 13 domains · 150+ algorithms</span>
+
         </div>
 
         {/* Search */}
@@ -634,21 +657,23 @@ export default function MLUniverse() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search algorithms..."
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              style={{
+              background: "#ffffff",
+              border: "1px solid #e5e7eb",
               borderRadius: 6,
               padding: "6px 12px 6px 32px",
-              color: "#ffffff",
+              color: "#111111",
+
               fontSize: 12,
               width: 200,
               outline: "none",
               fontFamily: "inherit",
             }}
           />
-          <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.3)", fontSize: 12 }}>⌕</span>
+              <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#6b7280", fontSize: 12 }}>⌕</span>
         </div>
       </div>
+
 
       {/* ── BODY */}
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
@@ -656,8 +681,10 @@ export default function MLUniverse() {
         {/* LEFT: Tree */}
         <div style={{
           width: "55%", overflowY: "auto", padding: "16px 8px 16px 12px",
-          borderRight: "1px solid rgba(255,255,255,0.05)",
+          borderRight: "1px solid #e5e7eb",
+          background: "#ffffff",
         }}>
+
           {displayTree ? (
             <TreeNode
               node={displayTree}
@@ -667,16 +694,18 @@ export default function MLUniverse() {
               inheritedColor="#60e4d4"
             />
           ) : (
-            <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, padding: 20, fontFamily: "monospace" }}>No results for "{search}"</div>
+            <div style={{ color: "#666666", fontSize: 12, padding: 20, fontFamily: "monospace" }}>No results for "{search}"</div>
+
           )}
         </div>
 
         {/* RIGHT: Detail Panel */}
         <div style={{
           width: "45%",
-          background: "#090b10",
+          background: "#ffffff",
           display: "flex",
           flexDirection: "column",
+
           overflow: "hidden",
         }}>
           <DetailPanel name={selected} accent={accent} />
@@ -686,24 +715,26 @@ export default function MLUniverse() {
       {/* ── FOOTER */}
       <div style={{
         padding: "8px 24px",
-        borderTop: "1px solid rgba(255,255,255,0.04)",
-        background: "#0a0c12",
+        borderTop: "1px solid #e5e7eb",
+        background: "#ffffff",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         flexShrink: 0,
       }}>
-        <span style={{ color: "rgba(255,255,255,0.18)", fontSize: 10, fontFamily: "monospace", letterSpacing: "0.08em" }}>
+        <span style={{ color: "#6b7280", fontSize: 10, fontFamily: "monospace", letterSpacing: "0.08em" }}>
           {selected ? `SELECTED: ${selected.toUpperCase()}` : "CLICK ANY NODE TO EXPLORE"}
         </span>
-        <span style={{ color: "rgba(255,255,255,0.12)", fontSize: 10, fontFamily: "monospace" }}>ML UNIVERSE v2.0</span>
+        <span style={{ color: "#9ca3af", fontSize: 10, fontFamily: "monospace" }}>ML UNIVERSE v2.0</span>
       </div>
+
 
       <style>{`
         *::-webkit-scrollbar { width: 4px; }
         *::-webkit-scrollbar-track { background: transparent; }
-        *::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
-        *::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
-        input::placeholder { color: rgba(255,255,255,0.25); }
-        input:focus { border-color: rgba(255,255,255,0.25) !important; }
+        *::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 2px; }
+        *::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.15); }
+
+        input::placeholder { color: rgba(0,0,0,0.35); }
+        input:focus { border-color: rgba(0,0,0,0.2) !important; }
       `}</style>
     </div>
   );
