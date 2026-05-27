@@ -11,7 +11,7 @@
 ╚═╝     ╚═╝╚══════╝       ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝
 ```
 
-# 🧠 Machine Learning Universe
+# Machine Learning Universe
 
 > *Interactive Machine Learning roadmap with real-world intelligence, production insights, and 150+ ML concepts in one visual system.*
 
@@ -28,7 +28,7 @@
 
 ---
 
-## ⚡ Overview
+## Overview
 
 ML Universe is a fully interactive Machine Learning knowledge tree built using **React + Vite**.
 
@@ -47,7 +47,7 @@ Designed for:
 
 ---
 
-## 🌍 Live Demo
+## Live Demo
 
 🔗 https://chandan24-cell.github.io/ML-Tree/
 
@@ -130,7 +130,7 @@ npm run deploy
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 **Chandan Kumar Sah**  
 AI/ML Engineering Student
